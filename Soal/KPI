@@ -1,0 +1,182 @@
+#Nama file    =   KPI.py
+#Tanggal      =   8 Desember 2022
+#Pembuat      =   # Dzu Sunan Muhammad                      (24060122120034)  : KELAS C
+                  # Awang Pratama Putra Mulya               (24060122120039)  : KELAS D
+                  # Aniqah Nursabrina                       (24060122120036)  : KELAS A
+                  # Maulida Aprillia Cinta Ariyatin         (24060122120029)  : KELAS B
+#Deskripsi    =   Sebuah program untuk menentukan peserta yang lolos seleksi calon ketua dan calon wakil ketua himpunan
+#---------------------------------------------------------------------------------------------------------------------------------
+#Studi Kasus  = Himpunan Mahasiswa Informatika (HMIF) Undip membentuk suatu komisi yaitu Komisi Pemilihan Informatika (KPI) 
+#               yang bertujuan untuk menyelenggarakan pemilihan kahim dan wakahim yang dilakukan oleh seluruh warga informatika. KPI 
+#               telah membuat beberapa syarat kepada para calon kahim dan calon wakahim, syarat yang pertama adalah cakahim harus 
+#               berumur minimal 21 tahun, dan syarat yang kedua setiap cakahim sudah harus memiliki pasangan cawakahim. Terdapat 
+#               beberapa orang yang ingin mendaftarkan dirinya menjadi kahim diantara lain, yaitu Lemon, Reva, Demas, Zya, dan Rehan. 
+#               Lemon sudah memiliki pasangan yaitu Akbar tetapi umur mereka masih di bawah 21 tahun, Reva belum memiliki pasangan 
+#               dan umurnya masih di bawah 21 tahun, Demas sudah memiliki pasangan yaitu Qarina dan umur mereka sudah di atas 21 tahun, 
+#               Zya sudah memiliki pasangan yaitu Pamong dan umur mereka di atas 21 tahun, Rehan tidak memiliki pasangan tetapi umurnya 
+#               di atas 21 tahun. Bantulah KPI dalam melakukan seleksi kepada para calon
+
+#Solusi       = Untuk seleksi pertama kami membuat sebuah fungsi pohon dimana cakahim yang memiliki umur <21 tahun akan berada disebelah 
+#               kiri root, sedangkan cakahim yang memiliki umur >=21 tahun akan berada disebelah kanan root, dan apabila node mempunyai 
+#               siblings berarti cakahim tersebut sudah memiliki pasangan. Kemudian untuk seleksi yg kedua kami membuat dengan menggunakan 
+#               fungsi list dimana jika cakahim tidak mempunyai pasangan maka cakahim tersebut merupaka sebuah  atom, dan jika cakahim sudah 
+#               memiliki pasangan cawakahim maka cakahim dan cawakahim tersebut merupakan sebuah list of list.
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#DEFINISI DAN SPESIFIKASI TYPE
+#type PohonBiner: <A: elemen, L: PohonBiner, R: PohonBiner>
+#<A,L,R> adalah type bentukan pohon biner dimana A adalah akar, L adalah 
+# daun kiri, dan R adalah daun kanan
+class PohonBiner :
+  def __init__(self,L,A,R) :
+    self.A = A
+    self.L = L
+    self.R = R
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# DEFINISI DAN SPESIFIKASI LAMBDA
+#   IsEmpty?: list of integer --> boolean
+#     IsEmpty? bernilai true apabila list kosong
+#Realisasi
+IsEmpty = lambda S : S == []
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
+# DEFINISI DAN SPESIFIKASI PREDIKAT
+#   IsList?: list of list --> boolean
+#     IsList?(S) bernilai true apabila S adalah sebuah list bukan atom
+#Realisasi
+def IsList(S) :
+  if type(S) == list :
+    return True
+  else :
+    return False
+  
+#   IsAtom?: list of list --> boolean
+#     IsAtom?(S) bernilai true apabila S adalah sebuah atom bukan list
+#Realisasi
+def IsAtom(S) :
+  if IsList(S):
+    return NbElement(S) == 1
+  else :
+    return True
+  
+#   IsMember?: elemen, list --> boolean
+#     IsMember?(S) bernilai true apabila X adalah elemen list L
+#Realisasi
+def IsMember(x,L) :
+  if IsEmpty(L) :
+    return False
+  else :
+    if FirstList(L) == x :
+      return True
+    else :
+      return IsMember(x,TailList(L))
+
+#   IsSet?: list --> boolean
+#     IsSet?(S) bernilai true apabila L adalah set
+#Realisasi
+def IsSet(L) :
+    if IsEmpty(L) :
+        return True
+    else: #rekurens
+        if IsMember(FirstList(L),TailList(L)) :
+            return False
+        else:
+            return IsSet(TailList(L)) 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# DEFINISI DAN SPESIFIKASI PREDIKAT LAIN
+#     NbElement PohonBiner --> integer
+#       Nbelement(S) memberikan banyaknya elemen dari pohon P
+#Realisasi       
+def NbElement(S):
+    if IsEmpty(S):
+        return 0
+    else:
+        return 1 + NbElement(TailList(S))
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# DEFINISI DAN SPESIFIKASI SELEKTOR
+#   FirstList: list of list tidak kosong --> list
+#      FirstList(S) menghasilkan elemen pertama list, 
+#      mungkin sebuah 
+#      list atau atom
+#Realisasi
+def FirstList(S) :
+  if not IsEmpty(S) :
+    return S[0]
+
+#   TailList: list of list tidak kosong --> list
+#      TailList(S) menghasilkan sisa list of list S tanpa elemen pertama 
+#      list S
+#Realisasi
+def TailList(S) :
+  if not IsEmpty(S) :
+    return S[1:]
+
+#   Left: PohonBiner tidak kosong --> PohonBiner
+#      Left(tree) adalah sub pohon kiri dari tree. Jika tree adalah 
+#      //L A R\\ Left(tree) adalah L 
+#Realisasi
+def Left(tree) :
+  return tree.L
+
+#   Akar: PohonBiner tidak kosong --> Elemen
+#       Akar(tree) adalah akar dari tree. Jika tree adalah //L A R\\ 
+#       Akar(tree) adalah A 
+#Realisasi
+def Akar(tree) :
+  return tree.A
+
+#   Right: PohonBiner tidak kosong --> PohonBiner
+#     Right(tree) adalah sub pohon kanan dari tree. Jika tree adalah 
+#      //L A R\\ Right(tree) adalah R
+#Realisasi
+def Right(tree) :
+  return tree.R
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# DEFINISI DAN SPESIFIKASI KONSTRUKTOR
+#   KonsLo: List of list, list --> List of list
+#      KonsLo(L,S) diberikan sebuah List of list S dan sebuah list L. 
+#      membentuk list baru dengan list yang diberikan sebagai elemen 
+#      pertama list of list
+#Realisasi
+def KonsLo(L,S) :
+  return [L] + S
+
+#   MakeTree: 3 integer --> PohonBiner
+#     MakeTree(L,A,R) menghasilkan sebuah pohon biner dengan A adalah 
+#     akar, L adalah daun kiri, dan R adalah daun kanan
+def MakeTree(L,A,R) :
+  return PohonBiner(L,A,R)
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# DEFINISI DAN SPESIFIKASI OPERATOR
+#   Seleksi1: List --> List of list
+#      Seleksi1(S) menghasilkan list of list dari seleksi peserta yang memenuhi salah satu syarat yaitu memiliki umur >= 21 tahun
+#Realisasi
+def Seleksi1(S) :
+  if IsEmpty(S) :
+    return S
+  elif FirstList(S) == ["Lemon","Akbar"] :
+    return Seleksi1(TailList(S))
+  elif FirstList(S) == "Reva" :
+    return Seleksi1(TailList(S))
+  elif FirstList(S) == ["Demas","Qarina"] :
+    return [[Akar(Left(Right(Umur))),Akar(Right(Right(Umur)))]] + Seleksi1(TailList(S))
+  elif FirstList(S) == ["Zya","Pamong"] :
+    return [[Akar(Left(Left(Right(Umur)))),Akar(Right(Left(Right(Umur))))]] + Seleksi1(TailList(S))
+  elif FirstList(S) == "Rehan" :
+    return [Akar(Right(Right(Right(Umur))))]
+
+#   Seleksi2: List --> List of list
+#      Seleksi2(S) menghasilkan list of list dari seleksi peserta yang memenuhi salah satu syarat yaitu cakahim memiliki pasangan cawakahim
+#Realisasi
+def Seleksi2(S) :
+  if IsEmpty(S) :
+    return S
+  elif IsSet(S) :
+    if IsAtom(FirstList(S)) :
+      return Seleksi2(TailList(S))
+    elif IsList(FirstList(S)) :
+      return KonsLo(FirstList(S), Seleksi2(TailList(S)))
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# APLIKASI
+Umur = MakeTree(MakeTree(MakeTree(MakeTree(None,"Reva",None),"Lemon",None),"<21",MakeTree(None,"Akbar",None)),"Umur",MakeTree
+      (MakeTree(MakeTree(None,"Zya",None),"Demas",MakeTree(None,"Pamong",None)),">=21",MakeTree(None,"Qarina",MakeTree(None,"Rehan",None))))
+Peserta = [["Lemon","Akbar"],"Reva",["Demas","Qarina"],["Zya","Pamong"],"Rehan"]
+print(Seleksi2(Seleksi1(Peserta)))
